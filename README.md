@@ -2,11 +2,15 @@
 
 ## Introduction
 
-This package is a library to abstract crypto providers for go. The providers can be loaded during startup by adding the respective module in the local folder.
+This package is a library to abstract crypto providers for go. It uses plugin system. The providers can be loaded during startup by adding the respective module in the local folder.
+
+## Building
+
+Here is the [README.md](https://gitlab.eclipse.org/eclipse/xfsc/dev-ops/building/go-plugin/-/blob/main/README.md#building-go-services-with-plugin-based-dependencies) describing the specifics of build process for services, where the dependency is used.
 
 ## Usage
 
-Implement/Choose an Plugin which implements the commonProvider Interface and put it in the docker container in an folder which is identified by the environment variable CRYPTO_CORE_MODULE_PATH next to your application (e.g. in Docker File)
+Implement/Choose a plugin which implements the commonProvider Interface and put it in the docker container in an folder which is identified by the environment variable CRYPTO_CORE_MODULE_PATH next to your application (e.g. in Docker File)
 
 ## Compilation of Modules
 
@@ -25,3 +29,9 @@ func GetCryptoProvider() CryptoProvider {
 
 var Plugin CryptoProviderModule //export Plugin Symbol, dont change this name:) 
 ```
+
+## Configuration
+
+Following environment variables are required:
+
+CRYPTO_PLUGIN_PATH - path from where to fetch the compiled plugin .so file - default: /etc/plugins
