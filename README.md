@@ -35,3 +35,7 @@ var Plugin CryptoProviderModule //export Plugin Symbol, dont change this name:)
 Following environment variables are required:
 
 CRYPTO_PLUGIN_PATH - path from where to fetch the compiled plugin .so file - default: /etc/plugins
+
+## Problem Solving
+
+The compatibility of the plugins with this provider it's sometimes tricky, because the versions of go, each lib version etc. must match 100% otherwise it will reject it during startup.
