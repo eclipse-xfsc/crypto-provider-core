@@ -24,6 +24,7 @@ type CryptoIdentifier struct {
 }
 
 type CryptoFilter struct {
+	Id            string
 	Filter        regexp.Regexp
 	CryptoContext CryptoContext
 }
