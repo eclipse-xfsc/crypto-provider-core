@@ -1,6 +1,8 @@
 module github.com/eclipse-xfsc/crypto-provider-core
 
-go 1.24.0
+go 1.23.0
+
+toolchain go1.23.8
 
 require github.com/lestrrat-go/jwx/v2 v2.1.5
 
