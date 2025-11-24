@@ -4,7 +4,7 @@ import (
 	"os"
 	"plugin"
 
-	"github.com/eclipse-xfsc/crypto-provider-core/types"
+	"github.com/eclipse-xfsc/crypto-provider-core/v2/types"
 )
 
 var provider types.CryptoProvider
