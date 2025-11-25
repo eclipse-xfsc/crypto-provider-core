@@ -204,15 +204,18 @@ func (s *CryptoProviderServer) GetSupportedHashAlgs(ctx context.Context, _ *pb.E
 // START SERVER
 // =========================
 
-func Start(provider CryptoProvider, addr string) error {
+func Start(provider CryptoProvider, addr string) (error, func()) {
 	lis, err := net.Listen("tcp", addr)
 	if err != nil {
-		return fmt.Errorf("failed to listen on %s: %w", addr, err)
+		return fmt.Errorf("failed to listen on %s: %w", addr, err), nil
 	}
 
 	s := grpc.NewServer()
 	pb.RegisterCryptoProviderServiceServer(s, NewServer(provider))
 
 	fmt.Println("CryptoProvider gRPC server running at", addr)
-	return s.Serve(lis)
+	return s.Serve(lis), func() {
+		lis.Close()
+		s.Stop()
+	}
 }
