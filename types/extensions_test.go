@@ -1,4 +1,4 @@
-package tests
+package types_test
 
 import (
 	"encoding/base64"
@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/eclipse-xfsc/crypto-provider-core/types"
+	"github.com/eclipse-xfsc/crypto-provider-core/v2/types"
 )
 
 const pem = `-----BEGIN PUBLIC KEY-----

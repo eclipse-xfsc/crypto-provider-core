@@ -5,7 +5,7 @@ import (
 	"errors"
 	"reflect"
 
-	"github.com/eclipse-xfsc/crypto-provider-core/types"
+	"github.com/eclipse-xfsc/crypto-provider-core/v2/types"
 )
 
 /*
