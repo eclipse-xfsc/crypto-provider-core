@@ -2,47 +2,42 @@ package core
 
 import (
 	"os"
-	"plugin"
 
-	"github.com/eclipse-xfsc/crypto-provider-core/v2/types"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials/insecure"
+
+	pb "github.com/eclipse-xfsc/crypto-provider-core/v2/types/proto"
 )
 
-var provider types.CryptoProvider
-
-func initialize(path string) {
-	p, err := plugin.Open(path)
-	if err != nil {
-		panic(err)
+// CryptoEngine returns a gRPC client using CRYPTO_GRPC_ADDR or localhost.
+func CryptoEngine() (pb.CryptoProviderServiceClient, func()) {
+	addr := os.Getenv("CRYPTO_GRPC_ADDR")
+	if addr == "" {
+		addr = "127.0.0.1:9191"
 	}
-
-	v, err := p.Lookup("Plugin")
-	if err != nil {
-		panic(err)
-	}
-	provider = v.(types.CryptoProviderModule).GetCryptoProvider()
+	return CreateCryptoEngine(addr, insecure.NewCredentials())
 }
 
-/*
-Returns standard Cryptoengine which is shipped with the docker image and/or the local file system.
-*/
-func CryptoEngine() types.CryptoProvider {
-	path := os.Getenv("CRYPTO_PLUGIN_PATH")
-
-	if path == "" {
-		path = "/etc/plugins"
+// CreateCryptoEngine builds a gRPC client using the modern NewClient API.
+func CreateCryptoEngine(addr string, transportCredentials credentials.TransportCredentials) (pb.CryptoProviderServiceClient, func()) {
+	if addr == "" {
+		return nil, nil
 	}
 
-	initialize(path)
-	return provider
-}
+	// Modern gRPC client constructor
+	conn, err := grpc.NewClient(
+		addr,
+		grpc.WithTransportCredentials(transportCredentials),
+	)
 
-/*
-Allows it to switch the Plugin and reload a crypto engine from another path. Makes only sense when the file system contains more than one plugin. Mostly just for unit tests relevant.
-*/
-func CreateCryptoEngine(path string) types.CryptoProvider {
-	if path == "" {
-		return nil
+	if err != nil {
+		panic("failed to create gRPC client: " + err.Error())
 	}
-	initialize(path)
-	return provider
+
+	cleanup := func() {
+		conn.Close()
+	}
+
+	return pb.NewCryptoProviderServiceClient(conn), cleanup
 }
