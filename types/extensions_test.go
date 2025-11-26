@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/eclipse-xfsc/crypto-provider-core/v2/types"
+	"github.com/lestrrat-go/jwx/v2/jwa"
 )
 
 const pem = `-----BEGIN PUBLIC KEY-----
@@ -121,6 +122,12 @@ var pemAsJwk = map[string]string{
 func TestExtensionJWK(t *testing.T) {
 	key := types.CryptoKey{
 		Key: []byte(pem),
+		CryptoKeyParameter: types.CryptoKeyParameter{
+			Identifier: types.CryptoIdentifier{
+				KeyId: "myKey",
+			},
+			KeyType: types.Rsa2048,
+		},
 	}
 
 	jwk, err := key.GetJwk()
@@ -131,7 +138,7 @@ func TestExtensionJWK(t *testing.T) {
 
 	json.NewEncoder(os.Stdout).Encode(jwk)
 
-	p, b := jwk.Get("n")
+	p, b := jwk[0].Get("n")
 
 	if !b {
 		t.Error()
@@ -139,6 +146,22 @@ func TestExtensionJWK(t *testing.T) {
 	str := base64.RawURLEncoding.EncodeToString(p.([]byte))
 
 	if str != pemAsJwk["n"] {
+		t.Error()
+	}
+
+	if len(jwk) < 2 {
+		t.Error()
+	}
+
+	notFound := true
+	for _, j := range jwk {
+		if j.Algorithm() == jwa.PS256 {
+			notFound = false
+			break
+		}
+	}
+
+	if notFound {
 		t.Error()
 	}
 }
