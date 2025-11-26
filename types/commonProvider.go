@@ -14,10 +14,6 @@ type CryptoLogger interface {
 	Log(level CryptoLogLevel, msg string, err error)
 }
 
-type CryptoProviderModule interface {
-	GetCryptoProvider() CryptoProvider
-}
-
 type CryptoContextError struct {
 	Err error
 }
