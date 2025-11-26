@@ -10,7 +10,6 @@ type grpcCryptoProviderClient struct {
 	client pb.CryptoProviderServiceClient
 }
 
-// NewCryptoProviderClient turns a pb client into a local CryptoProvider.
 func NewCryptoProviderClient(pbClient pb.CryptoProviderServiceClient) CryptoProvider {
 	return &grpcCryptoProviderClient{client: pbClient}
 }
