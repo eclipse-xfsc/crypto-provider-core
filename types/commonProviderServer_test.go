@@ -58,7 +58,9 @@ func (f *FakeProvider) GetKeys(filter types.CryptoFilter) (*types.CryptoKeySet, 
 func (f *FakeProvider) GetKey(id types.CryptoIdentifier) (*types.CryptoKey, error) {
 	return &types.CryptoKey{Version: "v1"}, nil
 }
-func (f *FakeProvider) GenerateKey(p types.CryptoKeyParameter) error { return nil }
+func (f *FakeProvider) GenerateKey(p types.CryptoKeyParameter) error {
+	return nil
+}
 func (f *FakeProvider) IsKeyExisting(id types.CryptoIdentifier) (bool, error) {
 	return true, nil
 }

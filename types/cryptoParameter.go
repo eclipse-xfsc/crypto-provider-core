@@ -19,7 +19,7 @@ func FromProtoKeyParam(p *pb.CryptoKeyParameter) CryptoKeyParameter {
 
 	return CryptoKeyParameter{
 		Identifier: FromProtoIdentifier(p.Identifier),
-		KeyType:    KeyType(p.KeyType),
+		KeyType:    FromProtoKeyType(p.KeyType),
 		Params:     p.Params,
 	}
 }

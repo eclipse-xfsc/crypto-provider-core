@@ -166,6 +166,27 @@ func TestClient_Hash(t *testing.T) {
 	}
 }
 
+func TestClient_GenerateKey(t *testing.T) {
+	fake := &FakeProvider{}
+	pbClient, cleanup := startServer(t, fake)
+	defer cleanup()
+
+	client := NewCryptoProviderClient(pbClient)
+
+	err := client.GenerateKey(CryptoKeyParameter{
+		Identifier: CryptoIdentifier{
+			KeyId: "xy",
+			CryptoContext: CryptoContext{
+				Namespace: "transit",
+			},
+		},
+		KeyType: Ecdsap256,
+	})
+	if err != nil {
+		t.Fatalf("error: %v", err)
+	}
+}
+
 func TestClient_EncryptDecrypt(t *testing.T) {
 	fake := &FakeProvider{}
 	pbClient, cleanup := startServer(t, fake)
